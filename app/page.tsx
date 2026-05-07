@@ -1,210 +1,249 @@
-import Link from 'next/link'
-import { ArrowRight, Star, Shield, Zap, Users, CheckCircle, ChevronRight } from 'lucide-react'
-import config from '@/vertical.config'
-import { theme, btn } from '@/lib/theme'
-import HeroChatPreview from '@/components/HeroChatPreview'
+'use client'
+import { useState } from 'react'
+import { Zap, TrendingUp, DollarSign, BookOpen, ArrowRight, Download } from 'lucide-react'
 
-const SOCIAL_PROOF = [
-  { name: 'Sarah M.', role: 'Used last week', text: `Found the perfect ${config.providerLabel.toLowerCase()} within 20 minutes. The AI understood exactly what I needed.`, rating: 5 },
-  { name: 'James T.', role: 'Regular user', text: `${config.name} has transformed how I find trusted professionals. No more scrolling through endless profiles.`, rating: 5 },
-  { name: 'Priya K.', role: 'Verified family', text: 'The background checks and reviews gave us real peace of mind. Would recommend to anyone.', rating: 5 },
+const NICHES = [
+  'Parenting', 'Health & Wellness', 'Personal Finance', 'Productivity',
+  'Relationships', 'Fitness', 'Anxiety & Mental Health', 'Side Hustles',
+  'Home Organisation', 'Sleep', 'Nutrition & Diet', 'Career & Job Search',
+  'Small Business', 'Social Media', 'Travel Hacking', 'Pet Care',
+  'Pregnancy & Baby', 'Minimalism', 'Dating', 'Study & Learning',
 ]
 
-const HOW_IT_WORKS = [
-  { icon: '💬', step: '1', title: 'Chat with our AI', desc: `Tell our AI assistant what you need. No forms — just a natural conversation.` },
-  { icon: '✨', step: '2', title: 'Get matched', desc: `AI shortlists the best ${config.providerPlural.toLowerCase()} based on your specific requirements.` },
-  { icon: '📅', step: '3', title: 'Book instantly', desc: `Review profiles, check availability, and confirm — all in one place.` },
-]
+interface Idea {
+  title:            string
+  subtitle:         string
+  audience:         string
+  painPoint:        string
+  searchVolume:     'high' | 'medium' | 'low'
+  competition:      'high' | 'medium' | 'low'
+  trend:            'rising' | 'stable' | 'falling'
+  opportunityScore: number
+  suggestedPrice:   number
+  gumroadTitle:     string
+  chapters:         string[]
+}
+
+const BADGE: Record<string, string> = {
+  high:    'bg-green-500/20 text-green-400',
+  medium:  'bg-amber-500/20 text-amber-400',
+  low:     'bg-red-500/20 text-red-400',
+  rising:  'bg-violet-500/20 text-violet-400',
+  stable:  'bg-blue-500/20 text-blue-400',
+  falling: 'bg-red-500/20 text-red-400',
+}
+
+function ScoreBadge({ score }: { score: number }) {
+  const color = score >= 75 ? 'text-green-400' : score >= 50 ? 'text-amber-400' : 'text-red-400'
+  return (
+    <div className="flex flex-col items-center">
+      <span className={`text-2xl font-extrabold ${color}`}>{score}</span>
+      <span className="text-white/30 text-[10px]">opportunity</span>
+    </div>
+  )
+}
 
 export default function HomePage() {
-  const cats = config.categories.slice(0, 6)
+  const [niche, setNiche]     = useState('')
+  const [topic, setTopic]     = useState('')
+  const [count, setCount]     = useState(10)
+  const [ideas, setIdeas]     = useState<Idea[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError]     = useState('')
+  const [saved, setSaved]     = useState<Set<number>>(new Set())
+
+  async function generate() {
+    if (!niche) { setError('Select a niche'); return }
+    setError('')
+    setLoading(true)
+    setIdeas([])
+    try {
+      const res  = await fetch('/api/ideas', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ niche, topic, count }),
+      })
+      const data = await res.json() as { ideas?: Idea[]; error?: string }
+      if (!res.ok || !data.ideas) { setError(data.error ?? 'Failed to generate ideas'); return }
+      setIdeas(data.ideas)
+    } catch {
+      setError('Network error — try again')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  function toggleSave(i: number) {
+    setSaved(s => { const n = new Set(s); n.has(i) ? n.delete(i) : n.add(i); return n })
+  }
 
   return (
-    <div className="overflow-hidden">
+    <div className="min-h-screen" style={{ background: '#080712' }}>
+      {/* Navbar */}
+      <nav className="sticky top-0 z-50 border-b border-white/[0.06]"
+        style={{ background: 'rgba(8,7,18,0.85)', backdropFilter: 'blur(20px)' }}>
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+          <span className="font-extrabold text-xl bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">
+            PDFIdeas
+          </span>
+          <div className="flex items-center gap-3 text-sm">
+            <a href="/generate" className="text-white/50 hover:text-white transition-colors">My Guides</a>
+            <a href="#"
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white font-medium">
+              Sell on Gumroad →
+            </a>
+          </div>
+        </div>
+      </nav>
 
-      {/* ── HERO ───────────────────────────────────────────── */}
-      <section className="relative px-6 pt-20 pb-28 max-w-6xl mx-auto">
-        {/* Decorative blob */}
-        <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[500px] rounded-full opacity-20 blur-3xl -z-10 bg-gradient-to-br ${theme.gradient}`} />
+      <div className="max-w-5xl mx-auto px-6 py-12">
 
-        <div className="flex flex-col lg:flex-row items-center gap-16">
-          {/* Left: copy */}
-          <div className="flex-1 text-center lg:text-left fade-up">
-            {/* Trust badge */}
-            <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full ${theme.badge} text-xs font-medium mb-6`}>
-              <Zap size={12} />
-              AI-Powered Matching — Free to Use
+        {/* Header */}
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-500/10 text-violet-400 text-xs font-medium border border-violet-500/20 mb-4">
+            <Zap size={12} /> Find trending PDF ideas · AI writes the full guide · Sell for $9–$27
+          </div>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-3">
+            Generate PDF Guide Ideas
+          </h1>
+          <p className="text-white/45 text-lg">Find trending PDF guide ideas based on real search data</p>
+        </div>
+
+        {/* Generator card */}
+        <div className="rounded-2xl border border-white/[0.08] p-6 mb-8"
+          style={{ background: 'rgba(255,255,255,0.03)' }}>
+
+          <div className="grid md:grid-cols-3 gap-4 mb-4">
+            {/* Topic */}
+            <div className="md:col-span-1">
+              <label className="text-white/40 text-xs mb-1.5 block">Topic or Problem (Optional)</label>
+              <input
+                className="w-full rounded-xl px-4 py-2.5 text-sm text-white border border-white/10 outline-none focus:border-violet-500/50 transition-colors"
+                style={{ background: 'rgba(255,255,255,0.04)' }}
+                placeholder="e.g. healthy meal planning for busy parents..."
+                value={topic}
+                onChange={e => setTopic(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && generate()}
+              />
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight mb-6">
-              <span className="text-white">{config.tagline.split('—')[0]}</span>
-              {config.tagline.includes('—') && (
-                <><br /><span className={theme.gradientText}>— {config.tagline.split('—')[1].trim()}</span></>
-              )}
-            </h1>
-
-            <p className="text-white/55 text-lg mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-              Describe what you need in plain English. Our AI finds the best verified {config.providerPlural.toLowerCase()},
-              checks availability in real time, and helps you book in minutes — not days.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-              <Link href="/chat" className={btn.primary + ' text-base px-8 py-4'}>
-                Find my {config.providerLabel} <ArrowRight size={18} />
-              </Link>
-              <Link href="/providers" className={btn.secondary + ' text-base px-8 py-4'}>
-                I&apos;m a {config.providerLabel}
-              </Link>
+            {/* Niche */}
+            <div>
+              <label className="text-white/40 text-xs mb-1.5 block">Niche <span className="text-red-400">*</span></label>
+              <select
+                className="w-full rounded-xl px-4 py-2.5 text-sm text-white border border-white/10 outline-none focus:border-violet-500/50 transition-colors"
+                style={{ background: 'rgba(15,12,30,0.9)' }}
+                value={niche}
+                onChange={e => setNiche(e.target.value)}
+              >
+                <option value="">Select niche...</option>
+                {NICHES.map(n => <option key={n} value={n}>{n}</option>)}
+              </select>
             </div>
 
-            {/* Trust row */}
-            <div className="flex flex-wrap items-center gap-5 mt-8 justify-center lg:justify-start text-sm text-white/45">
-              <span className="flex items-center gap-1.5"><CheckCircle size={14} className={theme.textAccent} />Background checked</span>
-              <span className="flex items-center gap-1.5"><CheckCircle size={14} className={theme.textAccent} />Real verified reviews</span>
-              <span className="flex items-center gap-1.5"><CheckCircle size={14} className={theme.textAccent} />No hidden fees</span>
+            {/* Count */}
+            <div>
+              <label className="text-white/40 text-xs mb-1.5 block">
+                Number of Ideas: <span className="text-white font-bold">{count}</span>
+              </label>
+              <input type="range" min={3} max={20} value={count}
+                onChange={e => setCount(Number(e.target.value))}
+                className="w-full accent-violet-500 mt-2" />
+              <div className="flex justify-between text-white/25 text-xs mt-1">
+                <span>3</span><span>10</span><span>20</span>
+              </div>
             </div>
           </div>
 
-          {/* Right: AI chat preview */}
-          <div className="w-full lg:w-[400px] flex-shrink-0">
-            <HeroChatPreview />
-          </div>
-        </div>
-      </section>
+          {error && <p className="text-red-400 text-sm mb-3">{error}</p>}
 
-      {/* ── STATS BAR ───────────────────────────────────────── */}
-      <section className="border-y border-white/[0.06] py-8 glass">
-        <div className="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          {[
-            { n: '2,400+', l: `Verified ${config.providerPlural}` },
-            { n: '98%',    l: 'Satisfaction rate' },
-            { n: '< 5min', l: 'Avg match time' },
-            { n: '£0',     l: 'To browse & match' },
-          ].map(s => (
-            <div key={s.l}>
-              <div className={`text-2xl font-extrabold ${theme.gradientText}`}>{s.n}</div>
-              <div className="text-white/45 text-sm mt-1">{s.l}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── CATEGORIES ──────────────────────────────────────── */}
-      <section className="py-20 px-6 max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-white mb-3">What do you need help with?</h2>
-          <p className="text-white/45">Browse by category or let our AI guide you</p>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {cats.map(cat => (
-            <Link
-              key={cat.id}
-              href={`/search?category=${cat.id}`}
-              className={`${theme.card} ${theme.cardHover} ${theme.glowHover} p-5 flex flex-col gap-2 group`}
-            >
-              <span className="text-3xl">{cat.icon}</span>
-              <span className="font-semibold text-white group-hover:${theme.textAccentBold} transition-colors">{cat.label}</span>
-              <span className="text-white/45 text-xs leading-snug">{cat.desc}</span>
-            </Link>
-          ))}
-          <Link
-            href="/search"
-            className={`${theme.card} ${theme.cardHover} p-5 flex flex-col gap-2 items-center justify-center group`}
+          <button
+            onClick={generate}
+            disabled={loading}
+            className="w-full py-3 rounded-xl font-semibold text-white text-sm flex items-center justify-center gap-2 disabled:opacity-50 transition-all"
+            style={{ background: 'linear-gradient(135deg, #7c3aed, #a855f7, #ec4899)' }}
           >
-            <ChevronRight size={28} className={`${theme.textAccent} group-hover:translate-x-1 transition-transform`} />
-            <span className="font-semibold text-white/60 text-sm">All categories</span>
-          </Link>
+            <Zap size={16} />
+            {loading ? 'Generating ideas...' : 'Generate Ideas'}
+          </button>
         </div>
-      </section>
 
-      {/* ── HOW IT WORKS ────────────────────────────────────── */}
-      <section className="py-20 px-6 glass border-y border-white/[0.06]">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-3">How {config.name} works</h2>
-            <p className="text-white/45">From search to booked in under 5 minutes</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {HOW_IT_WORKS.map(step => (
-              <div key={step.step} className="text-center">
-                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${theme.gradient} flex items-center justify-center text-2xl mx-auto mb-4`}>
-                  {step.icon}
+        {/* Results */}
+        {ideas.length > 0 && (
+          <>
+            <p className="text-white/40 text-sm mb-4">
+              Generated <strong className="text-white">{ideas.length}</strong> ideas for <strong className="text-violet-400">{niche}</strong>
+            </p>
+            <div className="grid md:grid-cols-2 gap-4">
+              {ideas.map((idea, i) => (
+                <div key={i}
+                  className="rounded-2xl border border-white/[0.08] p-5 flex flex-col gap-3 hover:border-violet-500/30 transition-colors"
+                  style={{ background: 'rgba(255,255,255,0.03)' }}>
+
+                  {/* Header row */}
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1">
+                      <h3 className="font-bold text-white text-sm leading-snug mb-1">{idea.title}</h3>
+                      <p className="text-white/45 text-xs leading-snug">{idea.subtitle}</p>
+                    </div>
+                    <ScoreBadge score={idea.opportunityScore} />
+                  </div>
+
+                  {/* Audience */}
+                  <p className="text-white/35 text-xs flex items-center gap-1.5">
+                    <BookOpen size={11} /> {idea.audience}
+                  </p>
+
+                  {/* Badges */}
+                  <div className="flex flex-wrap gap-1.5">
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${BADGE[idea.searchVolume]}`}>
+                      {idea.searchVolume === 'high' ? 'High' : idea.searchVolume === 'medium' ? 'Med' : 'Low'} Interest
+                    </span>
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${BADGE[idea.competition]}`}>
+                      {idea.competition === 'high' ? 'High' : idea.competition === 'medium' ? 'Med' : 'Low'} Competition
+                    </span>
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${BADGE[idea.trend]}`}>
+                      {idea.trend.charAt(0).toUpperCase() + idea.trend.slice(1)}
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/20 text-emerald-400 flex items-center gap-1">
+                      <DollarSign size={9}/>${idea.suggestedPrice}
+                    </span>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex gap-2 mt-auto pt-1">
+                    <a
+                      href={`/generate?title=${encodeURIComponent(idea.title)}&subtitle=${encodeURIComponent(idea.subtitle)}&audience=${encodeURIComponent(idea.audience)}&painPoint=${encodeURIComponent(idea.painPoint)}&chapters=${encodeURIComponent(JSON.stringify(idea.chapters))}`}
+                      className="flex-1 py-2 rounded-lg text-xs font-medium text-white text-center flex items-center justify-center gap-1.5 transition-all"
+                      style={{ background: 'linear-gradient(135deg, #7c3aed, #a855f7)' }}
+                    >
+                      <ArrowRight size={12}/> Write Full Guide
+                    </a>
+                    <button
+                      onClick={() => toggleSave(i)}
+                      className={`px-3 py-2 rounded-lg text-xs font-medium transition-all border ${
+                        saved.has(i)
+                          ? 'bg-violet-500/20 text-violet-400 border-violet-500/30'
+                          : 'border-white/10 text-white/40 hover:border-white/25'
+                      }`}
+                    >
+                      {saved.has(i) ? '✓ Saved' : 'Save'}
+                    </button>
+                  </div>
                 </div>
-                <div className={`text-xs font-bold ${theme.textAccent} mb-2 uppercase tracking-widest`}>Step {step.step}</div>
-                <h3 className="font-bold text-white text-lg mb-2">{step.title}</h3>
-                <p className="text-white/50 text-sm leading-relaxed">{step.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── SOCIAL PROOF ────────────────────────────────────── */}
-      <section className="py-20 px-6 max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-white mb-3">Trusted by real families</h2>
-          <div className="flex items-center justify-center gap-1 text-amber-400">
-            {'★★★★★'} <span className="text-white/50 text-sm ml-2">4.9 average from 1,200+ reviews</span>
-          </div>
-        </div>
-        <div className="grid md:grid-cols-3 gap-6">
-          {SOCIAL_PROOF.map((r, i) => (
-            <div key={i} className={`${theme.card} p-6`}>
-              <div className="stars text-sm mb-3">{'★'.repeat(r.rating)}</div>
-              <p className="text-white/70 text-sm leading-relaxed mb-4">&ldquo;{r.text}&rdquo;</p>
-              <div>
-                <div className="font-semibold text-white text-sm">{r.name}</div>
-                <div className="text-white/40 text-xs">{r.role}</div>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </section>
+          </>
+        )}
 
-      {/* ── TRUST FEATURES ──────────────────────────────────── */}
-      <section className="py-20 px-6 glass border-t border-white/[0.06]">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-3">Why {config.name}?</h2>
-            <p className="text-white/45">We built what {config.name.slice(0,4)} was missing</p>
+        {/* Empty state */}
+        {!loading && ideas.length === 0 && (
+          <div className="text-center py-16 text-white/25">
+            <TrendingUp size={40} className="mx-auto mb-4 opacity-30" />
+            <p>Select a niche and hit Generate Ideas</p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { icon: <Shield size={22} />, title: 'Background checks', desc: 'Every provider is DBS/background checked before they can take bookings.' },
-              { icon: <Star size={22} />,   title: 'Portable reviews',  desc: `${config.providerPlural} own their reviews — they follow them everywhere, preventing gaming.` },
-              { icon: <Zap size={22} />,    title: 'AI matching',       desc: 'Describe your situation in plain English. No tick boxes, no wasted calls.' },
-              { icon: <Users size={22} />,  title: 'Same-provider continuity', desc: 'Families can re-book the same trusted provider effortlessly.' },
-              { icon: <CheckCircle size={22} />, title: 'Transparent pricing', desc: 'Full quote upfront. No surprise call-out fees or hidden extras.' },
-              { icon: <ArrowRight size={22} />, title: '5-min booking',  desc: 'Go from search to confirmed booking without leaving the app.' },
-            ].map(f => (
-              <div key={f.title} className={`${theme.card} p-5 flex gap-4 items-start`}>
-                <div className={`flex-shrink-0 w-10 h-10 rounded-xl ${theme.solidLight} flex items-center justify-center ${theme.textAccent}`}>
-                  {f.icon}
-                </div>
-                <div>
-                  <h4 className="font-semibold text-white mb-1">{f.title}</h4>
-                  <p className="text-white/50 text-sm leading-relaxed">{f.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── FINAL CTA ───────────────────────────────────────── */}
-      <section className="py-24 px-6">
-        <div className={`max-w-3xl mx-auto text-center glass rounded-3xl p-12 border ${theme.border} relative overflow-hidden`}>
-          <div className={`absolute inset-0 bg-gradient-to-br ${theme.gradient} opacity-5 rounded-3xl`} />
-          <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4 relative">
-            Ready to find your perfect {config.providerLabel.toLowerCase()}?
-          </h2>
-          <p className="text-white/50 mb-8 text-lg relative">Free to match. No card required. Takes 2 minutes.</p>
-          <Link href="/chat" className={btn.primary + ' text-base px-10 py-4 relative'}>
-            Get matched now <ArrowRight size={18} />
-          </Link>
-        </div>
-      </section>
-
+        )}
+      </div>
     </div>
   )
 }
