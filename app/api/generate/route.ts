@@ -80,6 +80,15 @@ export async function POST(req: NextRequest) {
     if (!title || !chapterTitles?.length) {
       return NextResponse.json({ error: 'title and chapters required' }, { status: 400 })
     }
+    if (title.length > 200 || (subtitle && subtitle.length > 200)) {
+      return NextResponse.json({ error: 'Title too long' }, { status: 400 })
+    }
+    if (!Array.isArray(chapterTitles) || chapterTitles.length > 10) {
+      return NextResponse.json({ error: 'Max 10 chapters' }, { status: 400 })
+    }
+    if (chapterTitles.some((c: unknown) => typeof c !== 'string' || c.length > 150)) {
+      return NextResponse.json({ error: 'Chapter title too long' }, { status: 400 })
+    }
 
     // 1. Introduction
     const { text: introText } = await callAI(

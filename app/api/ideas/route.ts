@@ -60,8 +60,14 @@ export async function POST(req: NextRequest) {
     }
 
     if (!niche) return NextResponse.json({ error: 'niche required' }, { status: 400 })
+    if (typeof niche !== 'string' || niche.length > 100) {
+      return NextResponse.json({ error: 'Invalid niche' }, { status: 400 })
+    }
+    if (topic && (typeof topic !== 'string' || topic.length > 200)) {
+      return NextResponse.json({ error: 'Topic too long' }, { status: 400 })
+    }
 
-    const clampedCount = Math.min(Math.max(count, 3), 20)
+    const clampedCount = Math.min(Math.max(count, 3), 10)
     const topicHint    = topic ? ` Topic hint: "${topic}".` : ''
 
     const { text, provider, model } = await callAI(
