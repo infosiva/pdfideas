@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { Zap, TrendingUp, DollarSign, BookOpen, ArrowRight, Download } from 'lucide-react'
+import { Zap, TrendingUp, DollarSign, BookOpen, ArrowRight, Download, Share2 } from 'lucide-react'
 
 const NICHES = [
   'Parenting', 'Health & Wellness', 'Personal Finance', 'Productivity',
@@ -171,9 +171,27 @@ export default function HomePage() {
         {/* Results */}
         {ideas.length > 0 && (
           <>
-            <p className="text-white/40 text-sm mb-4">
-              Generated <strong className="text-white">{ideas.length}</strong> ideas for <strong className="text-violet-400">{niche}</strong>
-            </p>
+            <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
+              <p className="text-white/40 text-sm">
+                Generated <strong className="text-white">{ideas.length}</strong> ideas for <strong className="text-violet-400">{niche}</strong>
+              </p>
+              {/* Export all as text — like Gumroad product descriptions */}
+              <button
+                onClick={() => {
+                  const text = ideas.map((idea, i) =>
+                    `#${i+1} ${idea.title}\n${idea.subtitle}\nAudience: ${idea.audience}\nPrice: $${idea.suggestedPrice}\nChapters: ${idea.chapters.join(', ')}`
+                  ).join('\n\n---\n\n')
+                  const blob = new Blob([text], { type: 'text/plain' })
+                  const url = URL.createObjectURL(blob)
+                  const a = document.createElement('a'); a.href = url
+                  a.download = `${niche.replace(/\s/g,'-')}-pdf-ideas.txt`
+                  a.click(); URL.revokeObjectURL(url)
+                }}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-white/60 hover:text-white border border-white/10 hover:border-violet-500/40 transition-all"
+              >
+                <Download size={13}/> Export All Ideas
+              </button>
+            </div>
             <div className="grid md:grid-cols-2 gap-4">
               {ideas.map((idea, i) => (
                 <div key={i}
@@ -211,13 +229,32 @@ export default function HomePage() {
                   </div>
 
                   {/* Actions */}
-                  <div className="flex gap-2 mt-auto pt-1">
+                  <div className="flex gap-2 mt-auto pt-1 flex-wrap">
                     <a
                       href={`/generate?title=${encodeURIComponent(idea.title)}&subtitle=${encodeURIComponent(idea.subtitle)}&audience=${encodeURIComponent(idea.audience)}&painPoint=${encodeURIComponent(idea.painPoint)}&chapters=${encodeURIComponent(JSON.stringify(idea.chapters))}`}
                       className="flex-1 py-2 rounded-lg text-xs font-medium text-white text-center flex items-center justify-center gap-1.5 transition-all"
                       style={{ background: 'linear-gradient(135deg, #7c3aed, #a855f7)' }}
                     >
-                      <ArrowRight size={12}/> Write Full Guide
+                      <ArrowRight size={12}/> Write Guide
+                    </a>
+                    {/* Gumroad — list it instantly */}
+                    <a
+                      href={`https://app.gumroad.com/products/new?name=${encodeURIComponent(idea.gumroadTitle || idea.title)}&price=${idea.suggestedPrice * 100}&description=${encodeURIComponent(idea.subtitle)}`}
+                      target="_blank" rel="noopener noreferrer"
+                      className="px-3 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1"
+                      style={{ background: '#ff90e8', color: '#000' }}
+                      title="List on Gumroad"
+                    >
+                      <DollarSign size={10}/> Gumroad
+                    </a>
+                    {/* Share on X */}
+                    <a
+                      href={`https://x.com/intent/tweet?text=${encodeURIComponent(`Just found a 🔥 PDF idea: "${idea.title}" — ${idea.audience} — selling at $${idea.suggestedPrice}\n\nGenerate yours free →`)}`}
+                      target="_blank" rel="noopener noreferrer"
+                      className="px-3 py-2 rounded-lg text-xs font-bold border border-white/10 text-white/40 hover:text-white transition-all"
+                      title="Share on X"
+                    >
+                      <Share2 size={11}/>
                     </a>
                     <button
                       onClick={() => toggleSave(i)}
@@ -227,7 +264,7 @@ export default function HomePage() {
                           : 'border-white/10 text-white/40 hover:border-white/25'
                       }`}
                     >
-                      {saved.has(i) ? '✓ Saved' : 'Save'}
+                      {saved.has(i) ? '✓' : '☆'}
                     </button>
                   </div>
                 </div>
