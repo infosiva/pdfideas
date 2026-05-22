@@ -18,7 +18,7 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline'",
       "font-src 'self' data:",
       "img-src 'self' data: https:",
-      "connect-src 'self' https://api.groq.com https://generativelanguage.googleapis.com https://api.anthropic.com https://api.cerebras.ai https://openrouter.ai",
+      "connect-src 'self' https://api.groq.com https://generativelanguage.googleapis.com https://api.anthropic.com https://api.cerebras.ai https://openrouter.ai https://jules.googleapis.com",
       "frame-ancestors 'none'",
     ].join('; '),
   },
