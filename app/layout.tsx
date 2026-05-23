@@ -5,6 +5,7 @@ import config from '@/vertical.config'
 import { getMeshStyle, getScrollbarColor, COLOR_MAP } from '@/lib/themeColors'
 import Navbar from '@/components/Navbar'
 import FloatingChatWrapper from '@/components/FloatingChatWrapper'
+import BackToTop from '@/components/BackToTop'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -65,6 +66,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </footer>
         <FloatingChatWrapper />
+        <BackToTop accentColor="#7c3aed" />
       </body>
     </html>
   )
