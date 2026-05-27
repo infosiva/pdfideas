@@ -2,6 +2,7 @@
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { ArrowLeft, Download, Copy, CheckCircle, Loader } from 'lucide-react'
+import Navbar from '@/components/Navbar'
 
 interface Chapter { title: string; content: string; tips: string[] }
 interface Guide {
@@ -48,6 +49,24 @@ function downloadTxt(guide: Guide) {
   a.download  = `${guide.title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.txt`
   a.click()
   URL.revokeObjectURL(url)
+}
+
+function renderMd(text: string) {
+  return text.split('\n').map((line, i) => {
+    if (/^#{1,3}\s/.test(line)) {
+      const content = line.replace(/^#{1,3}\s/, '')
+      return <p key={i} className="text-white font-semibold text-sm mt-4 mb-1">{content}</p>
+    }
+    const parts = line.split(/(\*\*[^*]+\*\*)/)
+    const rendered = parts.map((part, j) =>
+      /^\*\*[^*]+\*\*$/.test(part)
+        ? <strong key={j} className="text-white/90 font-semibold">{part.slice(2, -2)}</strong>
+        : part
+    )
+    return line.trim() === ''
+      ? <br key={i} />
+      : <p key={i} className="text-white/65 text-sm leading-relaxed">{rendered}</p>
+  })
 }
 
 function GenerateContent() {
@@ -155,7 +174,7 @@ function GenerateContent() {
           <div className="rounded-2xl border border-white/[0.08] p-6"
             style={{ background: 'rgba(255,255,255,0.03)' }}>
             <h2 className="text-white font-bold text-lg mb-3">Introduction</h2>
-            <p className="text-white/65 text-sm leading-relaxed whitespace-pre-wrap">{guide.introduction}</p>
+            <div className="space-y-1">{renderMd(guide.introduction)}</div>
           </div>
 
           {/* Chapters */}
@@ -168,7 +187,7 @@ function GenerateContent() {
                 </span>
                 <h2 className="text-white font-bold">{ch.title}</h2>
               </div>
-              <p className="text-white/65 text-sm leading-relaxed whitespace-pre-wrap mb-4">{ch.content}</p>
+              <div className="space-y-1 mb-4">{renderMd(ch.content)}</div>
               {ch.tips.length > 0 && (
                 <div className="border-t border-white/[0.06] pt-4">
                   <p className="text-white/30 text-xs font-bold uppercase tracking-wider mb-2">Key Takeaways</p>
@@ -188,7 +207,7 @@ function GenerateContent() {
           <div className="rounded-2xl border border-white/[0.08] p-6"
             style={{ background: 'rgba(255,255,255,0.03)' }}>
             <h2 className="text-white font-bold text-lg mb-3">Conclusion</h2>
-            <p className="text-white/65 text-sm leading-relaxed whitespace-pre-wrap">{guide.conclusion}</p>
+            <div className="space-y-1">{renderMd(guide.conclusion)}</div>
             {guide.bonusTips.length > 0 && (
               <div className="mt-4 border-t border-white/[0.06] pt-4">
                 <p className="text-white/30 text-xs font-bold uppercase tracking-wider mb-2">Bonus Tips</p>
@@ -223,14 +242,7 @@ function GenerateContent() {
 export default function GeneratePage() {
   return (
     <div className="min-h-screen" style={{ background: '#080712' }}>
-      <nav className="sticky top-0 z-50 border-b border-white/[0.06]"
-        style={{ background: 'rgba(8,7,18,0.85)', backdropFilter: 'blur(20px)' }}>
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center">
-          <a href="/" className="font-extrabold text-xl bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">
-            PDFIdeas
-          </a>
-        </div>
-      </nav>
+      <Navbar />
       <Suspense fallback={<div className="text-center py-24 text-white/40">Loading...</div>}>
         <GenerateContent />
       </Suspense>
