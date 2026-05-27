@@ -72,7 +72,7 @@ const config: VerticalConfig = {
   id:         'pdfideas',
   name:       'PDFIdeas',
   tagline:    'AI-powered PDF guide ideas you can sell on Gumroad today',
-  domain:     'pdfideas.vercel.app',
+  domain:     'pdfideas.app',
   themeColor: 'violet',
 
   providerLabel:  'Guide',
