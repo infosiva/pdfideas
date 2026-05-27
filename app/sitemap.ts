@@ -1,8 +1,7 @@
 import { MetadataRoute } from 'next'
-import config from '@/vertical.config'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = `https://${config.domain}`
+  const baseUrl = 'https://pdfideas.vercel.app'
 
   return [
     {
@@ -12,19 +11,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: `${baseUrl}/search`,
+      url: `${baseUrl}/generate`,
       lastModified: new Date(),
-      changeFrequency: 'daily',
+      changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
       url: `${baseUrl}/how-it-works`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/chat`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,

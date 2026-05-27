@@ -10,16 +10,16 @@ export type BookingFlow  = 'instant' | 'quote_first' | 'consult_first'
 
 export interface VerticalConfig {
   // ── Identity ────────────────────────────────────────────
-  id:          string   // slug used in URLs, DB tables, etc.
-  name:        string   // "CleanFast" / "ElderCare+" / "TuneUp"
+  id:          string
+  name:        string
   tagline:     string
-  domain:      string   // final domain, used in metadata
-  themeColor:  string   // tailwind color name: "blue" | "emerald" | "violet" etc.
+  domain:      string
+  themeColor:  string
 
   // ── Provider terminology ─────────────────────────────────
-  providerLabel:  string  // "Cleaner" | "Carer" | "Mechanic" | "Tutor"
-  providerPlural: string  // "Cleaners" | "Carers" | "Mechanics" | "Tutors"
-  consumerLabel:  string  // "Client" | "Family" | "Driver" | "Student"
+  providerLabel:  string
+  providerPlural: string
+  consumerLabel:  string
 
   // ── Service categories ───────────────────────────────────
   categories: Category[]
@@ -27,14 +27,14 @@ export interface VerticalConfig {
   // ── Booking ──────────────────────────────────────────────
   pricingModel:   PricingModel
   bookingFlow:    BookingFlow
-  minPrice:       number   // £ — floor for AI price suggestion
-  maxPrice:       number   // £ — ceiling
-  sessionMinutes: number   // default session length
+  minPrice:       number
+  maxPrice:       number
+  sessionMinutes: number
   platformFeePercent: number
 
   // ── AI context ───────────────────────────────────────────
-  aiSystemPrompt: string   // injected into every AI call
-  aiMatchHints:   string[] // extra signals for provider matching
+  aiSystemPrompt: string
+  aiMatchHints:   string[]
 
   // ── Features (toggle) ───────────────────────────────────
   features: {
@@ -47,8 +47,8 @@ export interface VerticalConfig {
     remoteSession:    boolean
     groupSession:     boolean
     insuranceBadge:   boolean
-    aiDiagnosis:      boolean   // e.g. car fault codes before mechanic
-    careJournal:      boolean   // e.g. daily notes for elder care
+    aiDiagnosis:      boolean
+    careJournal:      boolean
   }
 
   // ── SEO / meta ───────────────────────────────────────────
@@ -60,75 +60,74 @@ export interface VerticalConfig {
 export interface Category {
   id:    string
   label: string
-  icon:  string  // emoji or lucide icon name
+  icon:  string
   desc:  string
 }
 
 // ════════════════════════════════════════════════════════════
-// ACTIVE VERTICAL — swap this to change the entire app
+// ACTIVE VERTICAL — PDFIdeas
 // ════════════════════════════════════════════════════════════
 
 const config: VerticalConfig = {
-  // ── Elder Care ───────────────────────────────────────────
-  id:         'eldercare',
-  name:       'ElderCare+',
-  tagline:    'Trusted carers for your loved ones — found in minutes, not days',
-  domain:     'eldercare.plus',
+  id:         'pdfideas',
+  name:       'PDFIdeas',
+  tagline:    'AI-powered PDF guide ideas you can sell on Gumroad today',
+  domain:     'pdfideas.vercel.app',
   themeColor: 'violet',
 
-  providerLabel:  'Carer',
-  providerPlural: 'Carers',
-  consumerLabel:  'Family',
+  providerLabel:  'Guide',
+  providerPlural: 'Guides',
+  consumerLabel:  'Creator',
 
   categories: [
-    { id: 'companionship',  label: 'Companionship',       icon: '🤝', desc: 'Social visits, conversation, light outings' },
-    { id: 'personal-care',  label: 'Personal Care',       icon: '🛁', desc: 'Bathing, dressing, hygiene assistance' },
-    { id: 'dementia',       label: 'Dementia Support',    icon: '🧠', desc: 'Specialist memory care at home' },
-    { id: 'medication',     label: 'Medication Prompts',  icon: '💊', desc: 'Reminders, administration support' },
-    { id: 'mobility',       label: 'Mobility Assistance', icon: '🦽', desc: 'Transfers, exercise, fall prevention' },
-    { id: 'night-care',     label: 'Overnight / Live-in', icon: '🌙', desc: '24hr or night-shift live-in care' },
-    { id: 'post-hospital',  label: 'Post-Hospital Care',  icon: '🏥', desc: 'Recovery support after discharge' },
-    { id: 'end-of-life',    label: 'Palliative Support',  icon: '🕊️', desc: 'Compassionate end-of-life companionship' },
+    { id: 'parenting',      label: 'Parenting',          icon: '👶', desc: 'Baby sleep, toddler routines, school readiness' },
+    { id: 'health',         label: 'Health & Wellness',  icon: '💚', desc: 'Meal prep, habit stacks, stress management' },
+    { id: 'finance',        label: 'Personal Finance',   icon: '💰', desc: 'Budgeting, debt payoff, side income tracking' },
+    { id: 'productivity',   label: 'Productivity',       icon: '⚡', desc: 'Time blocking, deep work, inbox zero' },
+    { id: 'fitness',        label: 'Fitness',            icon: '🏋️', desc: 'Home workouts, running plans, nutrition guides' },
+    { id: 'side-hustles',   label: 'Side Hustles',       icon: '🚀', desc: 'Freelancing, digital products, passive income' },
+    { id: 'mental-health',  label: 'Mental Health',      icon: '🧠', desc: 'Anxiety tools, journaling, mindfulness' },
+    { id: 'relationships',  label: 'Relationships',      icon: '❤️', desc: 'Dating guides, communication, boundaries' },
   ],
 
-  pricingModel:        'hourly',
-  bookingFlow:         'consult_first',
-  minPrice:            15,
-  maxPrice:            40,
-  sessionMinutes:      60,
-  platformFeePercent:  12,
+  pricingModel:        'fixed',
+  bookingFlow:         'instant',
+  minPrice:            9,
+  maxPrice:            27,
+  sessionMinutes:      0,
+  platformFeePercent:  0,
 
-  aiSystemPrompt: `You are a compassionate care coordinator for ElderCare+.
-Help families find the right carer for their elderly relative.
-Ask about: the person's age, main challenges, preferred schedule,
-personality (quiet/social), whether they have dementia or mobility issues,
-and whether family can be present during visits.
-Never give medical advice. Always recommend consulting a GP.
-Be warm, empathetic, and reassuring — families are often stressed.`,
+  aiSystemPrompt: `You are a PDF guide creation assistant for PDFIdeas.
+Help creators find trending niches, write compelling guide titles, and identify
+profitable gaps in digital product markets. You specialise in guides sold on
+Gumroad, Etsy, and Ko-fi for $9–$27.
+When asked for ideas, return structured JSON with title, audience, pain point,
+chapter outline, suggested price, and opportunity score.
+Be specific, actionable, and commercially minded — creators need ideas that sell,
+not vague concepts.`,
 
   aiMatchHints: [
-    'dementia certification', 'moving and handling trained',
-    'first aid', 'palliative care experience', 'live-in experience',
-    'driving licence', 'same-gender preference',
+    'trending search volume', 'low competition niche', 'impulse-buy price point',
+    'evergreen topic', 'emotional pain point', 'quick-win promise',
   ],
 
   features: {
-    backgroundCheck:  true,
-    portfolioPhotos:  true,
-    videoIntro:       true,
-    instantBook:      false,
-    recurringBook:    true,
-    homeVisit:        true,
-    remoteSession:    false,
+    backgroundCheck:  false,
+    portfolioPhotos:  false,
+    videoIntro:       false,
+    instantBook:      true,
+    recurringBook:    false,
+    homeVisit:        false,
+    remoteSession:    true,
     groupSession:     false,
-    insuranceBadge:   true,
-    aiDiagnosis:      false,
-    careJournal:      true,
+    insuranceBadge:   false,
+    aiDiagnosis:      true,
+    careJournal:      false,
   },
 
-  metaTitle:       'ElderCare+ — Find Trusted Home Carers Near You',
-  metaDescription: 'AI-matched home carers for older adults. Background-checked, insured, reviewed by real families. Book a free consultation today.',
-  keywords:        ['home carer', 'elder care', 'elderly care at home', 'dementia carer', 'live-in carer'],
+  metaTitle:       'PDFIdeas — AI PDF Guide Ideas to Sell on Gumroad',
+  metaDescription: 'Generate trending PDF guide ideas with AI. Find profitable niches, get chapter outlines, and publish to Gumroad in minutes. Free to use.',
+  keywords:        ['pdf guide ideas', 'gumroad ideas', 'digital products to sell', 'passive income pdf', 'ai content ideas', 'etsy digital download ideas'],
 }
 
 export default config
@@ -138,6 +137,16 @@ export default config
 // ════════════════════════════════════════════════════════════
 
 export const PRESETS: Record<string, Partial<VerticalConfig>> = {
+  eldercare: {
+    id: 'eldercare', name: 'ElderCare+', themeColor: 'violet',
+    tagline: 'Trusted carers for your loved ones — found in minutes, not days',
+    domain: 'eldercare.plus',
+    providerLabel: 'Carer', providerPlural: 'Carers', consumerLabel: 'Family',
+    pricingModel: 'hourly', bookingFlow: 'consult_first',
+    features: { backgroundCheck:true, portfolioPhotos:true, videoIntro:true,
+      instantBook:false, recurringBook:true, homeVisit:true, remoteSession:false,
+      groupSession:false, insuranceBadge:true, aiDiagnosis:false, careJournal:true },
+  },
   mechanics: {
     id: 'mechanics', name: 'MechFix', themeColor: 'orange',
     tagline: 'Find a trusted local mechanic — AI pre-diagnosis included',
