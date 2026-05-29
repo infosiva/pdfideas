@@ -71,7 +71,7 @@ export interface Category {
 const config: VerticalConfig = {
   id:         'pdfideas',
   name:       'PDFIdeas',
-  tagline:    'AI-powered PDF guide ideas you can sell on Gumroad today',
+  tagline:    'AI generates the idea, outline, and price — you just sell it',
   domain:     'pdfideas.app',
   themeColor: 'violet',
 

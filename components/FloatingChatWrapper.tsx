@@ -12,7 +12,7 @@ export default function FloatingChatWrapper() {
   const [open, setOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [msgs, setMsgs] = useState<{ role: 'user' | 'bot'; text: string }[]>([
-    { role: 'bot', text: 'Hi! Need help with PDF ideas, guides or digital products to sell? 📄' },
+    { role: 'bot', text: 'Hi! Tell me your niche and I\'ll generate PDF guide ideas with titles, outlines, and Gumroad-ready pricing — ready to sell today.' },
   ])
   const [input, setInput] = useState('')
 
