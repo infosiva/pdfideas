@@ -209,6 +209,25 @@ export default function HomePage() {
           from { opacity: 0; transform: translateY(12px); }
           to   { opacity: 1; transform: translateY(0); }
         }
+        .citation-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 3px;
+          padding: 1px 7px;
+          border-radius: 99px;
+          background: rgba(124,58,237,0.15);
+          border: 1px solid rgba(124,58,237,0.3);
+          color: #a78bfa;
+          font-size: 10px;
+          font-weight: 700;
+          margin: 0 2px;
+          cursor: pointer;
+          vertical-align: middle;
+          text-decoration: none;
+        }
+        .citation-pill:hover {
+          background: rgba(124,58,237,0.25);
+        }
       `}</style>
 
       <div className="max-w-5xl mx-auto px-6 py-12">
@@ -221,8 +240,9 @@ export default function HomePage() {
           <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-3">
             Generate PDF Guide Ideas
           </h1>
-          <p className="text-white/45 text-lg">Find trending PDF guide ideas based on real search data</p>
+          <p className="text-white/45 text-lg">Find trending PDF guide ideas based on real search data — then let AI write the full guide ready to sell</p>
         </div>
+
 
         {/* Generator card */}
         <div className="rounded-2xl border border-white/[0.08] p-6 mb-8"
