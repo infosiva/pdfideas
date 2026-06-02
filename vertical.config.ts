@@ -71,7 +71,7 @@ export interface Category {
 const config: VerticalConfig = {
   id:         'pdfideas',
   name:       'PDFIdeas',
-  tagline:    'AI generates the idea, outline, and price — you just sell it',
+  tagline:    'Chat across multiple PDFs at once — compare, extract, and summarise without switching tabs.',
   domain:     'pdfideas.app',
   themeColor: 'violet',
 

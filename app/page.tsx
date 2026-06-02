@@ -234,10 +234,17 @@ export default function HomePage() {
 
         {/* Header */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-500/10 text-violet-400 text-xs font-medium border border-violet-500/20 mb-4">
-            <Zap size={12} /> Find trending PDF ideas · AI writes the full guide · Sell for $9–$27
+          <div
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest mb-5"
+            style={{
+              background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+              border: '1px solid rgba(255,255,255,0.09)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.07)',
+              color: 'rgba(196,181,253,0.82)',
+            }}
+          >
+            <Zap size={10} className="text-violet-400" /> Find trending PDF ideas · AI writes the full guide · Sell for $9–$27
           </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-3">
+          <h1 className="font-black text-white mb-4" style={{ fontSize: 'clamp(2.25rem, 5vw, 3.5rem)', lineHeight: 0.97, letterSpacing: '-0.03em' }}>
             Generate PDF Guide Ideas
           </h1>
           <p className="text-white/45 text-lg">Find trending PDF guide ideas based on real search data — then let AI write the full guide ready to sell</p>
