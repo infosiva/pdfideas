@@ -183,18 +183,17 @@ function DemoPanel() {
         ))}
       </div>
 
-      {/* Stats row below */}
+      {/* Feature pills */}
       <div className="grid grid-cols-3 gap-3">
         {[
-          { label: 'Avg. revenue', value: '$847/mo', icon: '💰' },
-          { label: 'Ideas generated', value: '14,200+', icon: '⚡' },
-          { label: 'Guides sold', value: '3,100+', icon: '📄' },
+          { label: 'No signup needed', icon: '✓' },
+          { label: 'Gumroad ready', icon: '🛒' },
+          { label: 'Free to start', icon: '🚀' },
         ].map(s => (
           <div key={s.label} className="rounded-xl p-3 text-center"
             style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
             <div className="text-lg mb-0.5">{s.icon}</div>
-            <div className="text-white font-bold text-sm">{s.value}</div>
-            <div className="text-white/35 text-[10px]">{s.label}</div>
+            <div className="text-white/55 text-[10px] leading-tight">{s.label}</div>
           </div>
         ))}
       </div>
@@ -455,18 +454,17 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Mobile: mini stats strip */}
+          {/* Mobile: feature pills */}
           <div className="lg:hidden mt-8 grid grid-cols-3 gap-3">
             {[
-              { label: 'Ideas/month', value: '14k+', icon: '⚡' },
-              { label: 'Avg price', value: '$17', icon: '💰' },
-              { label: 'Guides sold', value: '3.1k', icon: '📄' },
+              { label: 'Free to start', icon: '🚀' },
+              { label: 'Gumroad ready', icon: '🛒' },
+              { label: 'Instant results', icon: '⚡' },
             ].map(s => (
               <div key={s.label} className="rounded-xl p-3 text-center"
                 style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
                 <div className="text-xl mb-1">{s.icon}</div>
-                <div className="text-white font-bold text-sm">{s.value}</div>
-                <div className="text-white/35 text-[10px]">{s.label}</div>
+                <div className="text-white/55 text-[10px] leading-tight">{s.label}</div>
               </div>
             ))}
           </div>
