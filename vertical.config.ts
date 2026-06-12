@@ -73,7 +73,7 @@ const config: VerticalConfig = {
   name:       'PDFIdeas',
   tagline:    'Chat across multiple PDFs at once — compare, extract, and summarise without switching tabs.',
   domain:     'pdfideas.app',
-  themeColor: 'violet',
+  themeColor: 'blue',
 
   providerLabel:  'Guide',
   providerPlural: 'Guides',

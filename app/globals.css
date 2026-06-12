@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #080712;
-  --foreground: #f0eeff;
+  --background: #f9fafb;
+  --foreground: #111827;
 }
 
 * {
@@ -18,23 +18,22 @@ body {
   color: var(--foreground);
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* mesh-bg is now inline style in layout.tsx — dynamic per vertical */
 
-/* ── Glass cards ────────────────────────────────────────── */
+/* ── Cards (light mode) ─────────────────────────────────── */
 .glass {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: #ffffff;
+  border: 1px solid #f3f4f6;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
 }
 
 .glass-strong {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
 
 /* ── Shimmer animation ──────────────────────────────────── */
@@ -69,27 +68,27 @@ body {
 }
 .pulse-glow { animation: pulseGlow 3s ease-in-out infinite; }
 
-/* ── Scrollbar — uses CSS var from layout ───────────────── */
+/* ── Scrollbar ──────────────────────────────────────────── */
 ::-webkit-scrollbar       { width: 6px; }
-::-webkit-scrollbar-track { background: var(--theme-base, #0d0920); }
-::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--theme-primary, #7c3aed) 60%, transparent); border-radius: 3px; }
+::-webkit-scrollbar-track { background: #f3f4f6; }
+::-webkit-scrollbar-thumb { background: #bfdbfe; border-radius: 3px; }
 
 /* ── Custom input styles ────────────────────────────────── */
 .input-dark {
   width: 100%;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.10);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
   border-radius: 12px;
   padding: 12px 16px;
-  color: #f0eeff;
+  color: #111827;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 200ms, box-shadow 200ms;
 }
 .input-dark:focus {
-  border-color: rgba(139,92,246,0.5);
-  box-shadow: 0 0 0 3px rgba(139,92,246,0.12);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
 }
-.input-dark::placeholder { color: rgba(255,255,255,0.3); }
+.input-dark::placeholder { color: #9ca3af; }
 
 /* ── Star rating ────────────────────────────────────────── */
 .stars { color: #f59e0b; letter-spacing: 2px; }

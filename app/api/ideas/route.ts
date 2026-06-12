@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
     })
 
   } catch (err) {
-    console.error('/api/ideas error:', err)
+    console.error('[pdfideas][/api/ideas]', err)
     return NextResponse.json({ error: String(err) }, { status: 500 })
   }
 }
