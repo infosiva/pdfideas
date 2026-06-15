@@ -55,11 +55,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           "description": config.metaDescription
         })}} />
       </head>
-      <body className={`${inter.className} min-h-full flex flex-col text-gray-900`}
-        style={{ background: '#f9fafb' }}
+      <body className={`${inter.className} min-h-full flex flex-col text-[#f3e8ff]`}
+        style={{ background: '#1e1b2e' }}
       >
         {/* Subtle top border accent */}
-        <div style={{ height: 3, background: 'linear-gradient(90deg, #2563eb, #3b82f6, #0ea5e9)', flexShrink: 0 }} />
+        <div style={{ height: 3, background: 'linear-gradient(90deg, #e879f9, #f0abfc, #c026d3)', flexShrink: 0 }} />
 
         <Navbar />
 
@@ -67,18 +67,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
 
-        <footer className="border-t border-gray-100 py-8 px-6 bg-white">
-          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-gray-400 text-sm">
+        <footer className="border-t border-white/[0.08] py-8 px-6 bg-[#1e1b2e]">
+          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-white/40 text-sm">
             <span>© {new Date().getFullYear()} {config.name}. All rights reserved.</span>
             <div className="flex gap-6">
-              <a href="/privacy" className="hover:text-gray-600 transition-colors">Privacy</a>
-              <a href="/terms"   className="hover:text-gray-600 transition-colors">Terms</a>
-              <a href="/contact" className="hover:text-gray-600 transition-colors">Contact</a>
+              <a href="/privacy" className="hover:text-white/70 transition-colors">Privacy</a>
+              <a href="/terms"   className="hover:text-white/70 transition-colors">Terms</a>
+              <a href="/contact" className="hover:text-white/70 transition-colors">Contact</a>
             </div>
           </div>
         </footer>
         <FloatingChatWrapper />
-        <BackToTop accentColor="#2563eb" />
+        <BackToTop accentColor="#e879f9" />
         <Script defer data-site={config.domain} src="http://31.97.56.148:3098/t.js" strategy="afterInteractive" />
       </body>
     </html>
