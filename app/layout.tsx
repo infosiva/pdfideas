@@ -7,6 +7,7 @@ import { getMeshStyle, getScrollbarColor, COLOR_MAP } from '@/lib/themeColors'
 import Navbar from '@/components/Navbar'
 import FloatingChatWrapper from '@/components/FloatingChatWrapper'
 import BackToTop from '@/components/BackToTop'
+import FeedbackWidget from '@/components/FeedbackWidget'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -79,6 +80,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </footer>
         <FloatingChatWrapper />
         <BackToTop accentColor="#e879f9" />
+        <FeedbackWidget siteName="PDFIdeas" />
         <Script defer data-site={config.domain} src="http://31.97.56.148:3098/t.js" strategy="afterInteractive" />
       </body>
     </html>
