@@ -12,6 +12,12 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
+          <div style={{ width: 26, height: 26, borderRadius: 7, background: 'linear-gradient(135deg, #4338ca, #6366f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 2h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2z" stroke="white" strokeWidth="1.8" fill="none"/>
+              <path d="M15 2v5h5" stroke="white" strokeWidth="1.8" fill="none"/>
+            </svg>
+          </div>
           <span className="font-extrabold text-xl text-[#f3e8ff]">
             PDF<span className="text-[#e879f9]">Ideas</span>
           </span>
