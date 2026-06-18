@@ -4,6 +4,6 @@ export const size = { width: 32, height: 32 }
 export const contentType = 'image/png'
 export default function Icon() {
   return new ImageResponse(
-    <div style={{ width: 32, height: 32, borderRadius: 8, background: 'linear-gradient(135deg, #7f1d1d, #ef4444)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>📄</div>
+    <div style={{ width: 32, height: 32, borderRadius: 8, background: 'linear-gradient(135deg, #4338ca, #6366f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>📄</div>
   )
 }
