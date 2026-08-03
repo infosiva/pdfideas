@@ -98,7 +98,7 @@ async function askAI(
     ] : []),
     // 2. Groq — free tier
     ...(groqKey ? [
-      { name: 'groq/llama-4-scout', fn: () => callOpenAICompat('https://api.groq.com/openai/v1', 'Groq', groqKey, 'meta-llama/llama-4-scout-17b-16e-instruct', system, userMsg, Math.min(maxTokens, 8000)) },
+      { name: 'groq/llama-3.1-8b-instant', fn: () => callOpenAICompat('https://api.groq.com/openai/v1', 'Groq', groqKey, 'llama-3.1-8b-instant', system, userMsg, Math.min(maxTokens, 8000)) },
       { name: 'groq/llama-3.3-70b', fn: () => callOpenAICompat('https://api.groq.com/openai/v1', 'Groq', groqKey, 'llama-3.3-70b-versatile', system, userMsg, Math.min(maxTokens, 8000)) },
     ] : []),
     // 3. Gemini — free tier
