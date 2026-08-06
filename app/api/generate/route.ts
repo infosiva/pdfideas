@@ -10,6 +10,7 @@
  */
 import { NextRequest, NextResponse } from 'next/server'
 import { callAI } from '@/lib/ai'
+import { AI_LIMITER } from '@/lib/rateLimit'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -68,6 +69,8 @@ Return plain text only.`,
 }
 
 export async function POST(req: NextRequest) {
+  const limited = AI_LIMITER.check(req); if (limited) return limited
+
   try {
     const { title, subtitle, audience, chapters: chapterTitles, painPoint } = await req.json() as {
       title:    string
