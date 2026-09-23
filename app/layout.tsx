@@ -6,6 +6,7 @@ import config from '@/vertical.config'
 import { getMeshStyle, getScrollbarColor, COLOR_MAP } from '@/lib/themeColors'
 import Navbar from '@/components/Navbar'
 import FloatingChatWrapper from '@/components/FloatingChatWrapper'
+import { getSiteFlags } from '@/lib/flags'
 import BackToTop from '@/components/BackToTop'
 import FeedbackWidget from '@/components/FeedbackWidget'
 
@@ -32,7 +33,8 @@ export const metadata: Metadata = {
 const colors   = COLOR_MAP[config.themeColor] ?? COLOR_MAP['violet']
 const meshStyle = getMeshStyle(config.themeColor)
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const flags = await getSiteFlags('pdfideas')
   return (
     <html
       lang="en"
@@ -84,7 +86,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
           </div>
         </footer>
-        <FloatingChatWrapper />
+        {flags.chatbot && <FloatingChatWrapper />}
         <BackToTop accentColor="#e879f9" />
         <FeedbackWidget siteName="PDFIdeas" />
         <Script defer data-site={config.domain} src="https://31.97.56.148:3098/t.js" strategy="afterInteractive" />
