@@ -10,6 +10,7 @@ import { getSiteFlags } from '@/lib/flags'
 import BackToTop from '@/components/BackToTop'
 import FeedbackWidget from '@/components/FeedbackWidget'
 
+import { MotionProvider } from "@infosiva/shared-ui/modern";
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -73,7 +74,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Navbar />
 
         <main className="flex-1">
-          {children}
+          <MotionProvider>{children}</MotionProvider>
         </main>
 
         <footer className="border-t py-8 px-6" style={{ borderColor: 'var(--border, #c7d2fe)', background: 'var(--surface-1, #ffffff)' }}>

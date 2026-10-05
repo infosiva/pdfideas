@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { MagneticButton } from "@infosiva/shared-ui/modern";
 import { Zap, DollarSign, BookOpen, ArrowRight, Share2, Bookmark, BookmarkCheck, Store, Sparkles, Target } from 'lucide-react'
 import LiveStatsBar from '@/components/LiveStatsBar'
 import { usePromo } from '@/hooks/usePromo'
@@ -382,7 +383,7 @@ export default function HomePage() {
 
               {error && <p className="text-red-500 text-xs mb-3 flex items-center gap-1.5">⚠ {error}</p>}
 
-              <button onClick={generate} disabled={loading}
+              <MagneticButton onClick={generate} disabled={loading}
                 className="w-full py-3.5 rounded-xl font-bold text-white text-sm flex items-center justify-center gap-2 disabled:opacity-50 hover:opacity-90 active:scale-[0.97]"
                 style={{
                   background: 'var(--accent, #6366f1)',
@@ -392,7 +393,7 @@ export default function HomePage() {
                 {loading
                   ? <><span className="animate-spin inline-block">⟳</span> Generating ideas...</>
                   : <><Zap size={16}/> Generate Ideas</>}
-              </button>
+              </MagneticButton>
             </div>
 
             {/* Trust row */}
