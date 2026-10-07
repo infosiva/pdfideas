@@ -1,108 +1,63 @@
 'use client'
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import { MessageCircle, X, Send } from 'lucide-react'
 
-const ACCENT = '#8b5cf6'
-const ACCENT_RGB = '139,92,246'
-const ACCENT_DARK = '#7c3aed'
-const BG = 'rgba(6,6,16,0.97)'
-const BOTTOM_OFFSET = 84
+type Msg = { role: 'user' | 'assistant'; content: string }
+const INTRO: Msg = { role: 'assistant', content: 'Ask me about picking a niche, outlining a PDF guide, pricing, or where to sell it.' }
 
 export default function FloatingChatWrapper() {
   const [open, setOpen] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
-  const [msgs, setMsgs] = useState<{ role: 'user' | 'bot'; text: string }[]>([
-    { role: 'bot', text: 'Hi! Tell me your niche and I\'ll generate PDF guide ideas with titles, outlines, and Gumroad-ready pricing — ready to sell today.' },
-  ])
+  const [msgs, setMsgs] = useState<Msg[]>([INTRO])
   const [input, setInput] = useState('')
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 640)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
+  const [busy, setBusy] = useState(false)
+  const end = useRef<HTMLDivElement>(null)
+  useEffect(() => { end.current?.scrollIntoView({ block: 'end' }) }, [msgs, open])
 
   async function send() {
-    if (!input.trim()) return
-    const userMsg = input
-    setMsgs(m => [...m, { role: 'user', text: userMsg }])
-    setInput('')
+    const text = input.trim()
+    if (!text || busy) return
+    const next = [...msgs, { role: 'user' as const, content: text }]
+    setMsgs(next); setInput(''); setBusy(true)
     try {
-      const res = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: [{ role: 'user', content: userMsg }] }) })
-      const data = await res.json()
-      setMsgs(m => [...m, { role: 'bot', text: data.text || 'Happy to help!' }])
+      const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: next.slice(1) }) })
+      const d = await r.json().catch(() => ({}))
+      const reply = r.status === 429 ? 'Chat limit reached (60 per hour). Please try again later.' : d.reply
+      setMsgs(m => [...m, { role: 'assistant', content: reply || 'Sorry, something went wrong. Please try again.' }])
     } catch {
-      setMsgs(m => [...m, { role: 'bot', text: 'Try again in a moment!' }])
-    }
-  }
-
-  const panelStyle: React.CSSProperties = isMobile ? {
-    position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 9998,
-    width: '100%', height: `calc(100dvh - ${BOTTOM_OFFSET}px)`,
-    borderRadius: '16px 16px 0 0', background: BG,
-    border: `1px solid rgba(${ACCENT_RGB},0.25)`,
-    boxShadow: '0 -8px 40px rgba(0,0,0,0.8)',
-    display: 'flex', flexDirection: 'column', overflow: 'hidden',
-  } : {
-    position: 'fixed', bottom: 88, right: 24, zIndex: 9998,
-    width: 340, height: 460, borderRadius: 16, background: BG,
-    border: `1px solid rgba(${ACCENT_RGB},0.25)`,
-    boxShadow: '0 8px 40px rgba(0,0,0,0.7)',
-    display: 'flex', flexDirection: 'column', overflow: 'hidden',
+      setMsgs(m => [...m, { role: 'assistant', content: 'Network error. Please try again.' }])
+    } finally { setBusy(false) }
   }
 
   return (
     <>
-      <motion.button onClick={() => setOpen(o => !o)} whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.93 }}
-        style={{ position: 'fixed', bottom: 24, right: 24, width: 52, height: 52, borderRadius: '50%',
-          background: `linear-gradient(135deg,${ACCENT},${ACCENT_DARK})`, border: 'none', cursor: 'pointer',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: `0 4px 20px rgba(${ACCENT_RGB},0.45)`, zIndex: 9999, fontSize: 20 }}>
-        {open ? '✕' : '📄'}
-      </motion.button>
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={isMobile ? { y: '100%' } : { opacity: 0, y: 12, scale: 0.97 }}
-            animate={isMobile ? { y: 0 } : { opacity: 1, y: 0, scale: 1 }}
-            exit={isMobile ? { y: '100%' } : { opacity: 0, y: 12, scale: 0.97 }}
-            transition={{ duration: isMobile ? 0.3 : 0.2, ease: [0.23,1,0.32,1] }}
-            style={panelStyle}
-          >
-            <div style={{ flexShrink: 0, padding: '12px 16px', borderBottom: `1px solid rgba(${ACCENT_RGB},0.2)`,
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: 18 }}>📄</span>
-                <span style={{ fontSize: 13, fontWeight: 700, color: '#eef' }}>PDFIdeas AI</span>
-                <span style={{ fontSize: 10, fontWeight: 600, padding: '2px 7px', borderRadius: 20,
-                  background: `rgba(${ACCENT_RGB},0.18)`, color: ACCENT, border: `1px solid rgba(${ACCENT_RGB},0.3)` }}>FREE</span>
+      {open && (
+        <div role="dialog" aria-label="PDFIdeas assistant" className="fixed z-[9998] flex flex-col overflow-hidden rounded-2xl border shadow-2xl"
+          style={{ right: 16, bottom: 88, width: 'min(340px, calc(100vw - 32px))', height: 'min(460px, calc(100dvh - 120px))', background: '#fff', borderColor: 'var(--border)' }}>
+          <div className="flex items-center justify-between px-4 py-3" style={{ background: 'var(--accent)', color: 'var(--accent-on)' }}>
+            <strong className="text-sm">PDFIdeas assistant</strong>
+            <button onClick={() => setOpen(false)} aria-label="Close chat" className="w-8 h-8 flex items-center justify-center rounded-lg"><X size={16} /></button>
+          </div>
+          <div className="flex-1 overflow-y-auto p-3 space-y-2" style={{ background: 'var(--background)' }} aria-live="polite">
+            {msgs.map((m, i) => (
+              <div key={i} className={m.role === 'user' ? 'flex justify-end' : 'flex'}>
+                <div className="text-sm px-3 py-2 rounded-xl max-w-[85%] whitespace-pre-wrap"
+                  style={m.role === 'user' ? { background: 'var(--accent)', color: 'var(--accent-on)' } : { background: '#fff', border: '1px solid var(--border)', color: 'var(--foreground)' }}>{m.content}</div>
               </div>
-              <button onClick={() => setOpen(false)} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.3)', fontSize: 18, cursor: 'pointer' }}>×</button>
-            </div>
-            <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {msgs.map((m, i) => (
-                <div key={i} style={{ alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',
-                  background: m.role === 'user' ? `rgba(${ACCENT_RGB},0.35)` : 'rgba(255,255,255,0.07)',
-                  padding: '8px 12px', borderRadius: m.role === 'user' ? '12px 12px 4px 12px' : '12px 12px 12px 4px',
-                  fontSize: 13, color: 'rgba(240,240,255,0.9)', maxWidth: '85%', lineHeight: 1.5 }}>
-                  {m.text}
-                </div>
-              ))}
-            </div>
-            <div style={{ flexShrink: 0, padding: '10px 12px', borderTop: `1px solid rgba(${ACCENT_RGB},0.15)`,
-              display: 'flex', gap: 8, paddingBottom: 'max(10px, env(safe-area-inset-bottom))' }}>
-              <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && send()}
-                placeholder="Ask anything..."
-                style={{ flex: 1, background: 'rgba(255,255,255,0.06)', border: `1px solid rgba(${ACCENT_RGB},0.25)`,
-                  borderRadius: 10, padding: '8px 12px', fontSize: isMobile ? 16 : 13, color: '#eef', outline: 'none' }} />
-              <button onClick={send} style={{ background: `linear-gradient(135deg,${ACCENT},${ACCENT_DARK})`, border: 'none',
-                borderRadius: 10, padding: '8px 14px', fontSize: 14, color: '#fff', cursor: 'pointer', fontWeight: 600 }}>→</button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            ))}
+            {busy && <div className="text-xs" style={{ color: 'var(--text-3)' }}>Thinking...</div>}
+            <div ref={end} />
+          </div>
+          <form onSubmit={e => { e.preventDefault(); send() }} className="flex gap-2 p-3 border-t" style={{ background: '#fff', borderColor: 'var(--border)' }}>
+            <input className="form-input" style={{ minHeight: 44 }} value={input} onChange={e => setInput(e.target.value)} placeholder="Ask about PDF guides" maxLength={1000} aria-label="Message" />
+            <button type="submit" disabled={busy} aria-label="Send" className="btn-accent w-11 h-11 rounded-xl flex items-center justify-center shrink-0"><Send size={16} /></button>
+          </form>
+        </div>
+      )}
+      <button onClick={() => setOpen(o => !o)} aria-label={open ? 'Close chat' : 'Open chat'} aria-expanded={open}
+        className="btn-accent fixed z-[9999] w-14 h-14 rounded-full flex items-center justify-center" style={{ right: 16, bottom: 20 }}>
+        {open ? <X size={22} /> : <MessageCircle size={22} />}
+      </button>
     </>
   )
 }

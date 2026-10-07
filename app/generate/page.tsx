@@ -2,7 +2,6 @@
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { ArrowLeft, Download, Copy, CheckCircle, Loader } from 'lucide-react'
-import Navbar from '@/components/Navbar'
 
 interface Chapter { title: string; content: string; tips: string[] }
 interface Guide {
@@ -21,8 +20,8 @@ function CopyBtn({ text }: { text: string }) {
   }
   return (
     <button onClick={copy}
-      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 text-white/50 hover:text-white text-xs transition-colors">
-      {copied ? <CheckCircle size={12} className="text-green-400"/> : <Copy size={12}/>}
+      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#cfe3c4] text-[#4a6040] hover:text-[#0f1a0b] text-xs transition-colors">
+      {copied ? <CheckCircle size={12} className="text-[#1a6b0a]"/> : <Copy size={12}/>}
       {copied ? 'Copied!' : 'Copy'}
     </button>
   )
@@ -55,17 +54,17 @@ function renderMd(text: string) {
   return text.split('\n').map((line, i) => {
     if (/^#{1,3}\s/.test(line)) {
       const content = line.replace(/^#{1,3}\s/, '')
-      return <p key={i} className="text-white font-semibold text-sm mt-4 mb-1">{content}</p>
+      return <p key={i} className="text-[#0f1a0b] font-semibold text-sm mt-4 mb-1">{content}</p>
     }
     const parts = line.split(/(\*\*[^*]+\*\*)/)
     const rendered = parts.map((part, j) =>
       /^\*\*[^*]+\*\*$/.test(part)
-        ? <strong key={j} className="text-white/90 font-semibold">{part.slice(2, -2)}</strong>
+        ? <strong key={j} className="text-[#2a3d22] font-semibold">{part.slice(2, -2)}</strong>
         : part
     )
     return line.trim() === ''
       ? <br key={i} />
-      : <p key={i} className="text-white/65 text-sm leading-relaxed">{rendered}</p>
+      : <p key={i} className="text-[#2a3d22] text-sm leading-relaxed">{rendered}</p>
   })
 }
 
@@ -112,30 +111,30 @@ function GenerateContent() {
   }
 
   if (!title) return (
-    <div className="text-center py-24 text-white/40">
-      <p>No guide selected. <a href="/" className="text-violet-400 underline">Generate ideas first →</a></p>
+    <div className="text-center py-24 text-[#4a6040]">
+      <p>No guide selected. <a href="/" className="text-[#1a6b0a] underline">Generate ideas first →</a></p>
     </div>
   )
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
-      <a href="/" className="flex items-center gap-2 text-white/40 hover:text-white text-sm mb-8 transition-colors">
+      <a href="/" className="flex items-center gap-2 text-[#4a6040] hover:text-[#0f1a0b] text-sm mb-8 transition-colors">
         <ArrowLeft size={16}/> Back to ideas
       </a>
 
       <div className="mb-8">
-        <h1 className="text-2xl font-extrabold text-white mb-1">{title}</h1>
-        <p className="text-white/50">{subtitle}</p>
-        {audience && <p className="text-white/30 text-sm mt-1">For: {audience}</p>}
+        <h1 className="text-2xl font-extrabold text-[#0f1a0b] mb-1">{title}</h1>
+        <p className="text-[#4a6040]">{subtitle}</p>
+        {audience && <p className="text-[#4a6040] text-sm mt-1">For: {audience}</p>}
       </div>
 
       {loading && (
-        <div className="rounded-2xl border border-white/[0.08] p-10 text-center"
-          style={{ background: 'rgba(255,255,255,0.03)' }}>
-          <Loader size={32} className="mx-auto mb-4 text-violet-400 animate-spin" />
-          <p className="text-white font-semibold mb-1">Writing your guide...</p>
-          <p className="text-white/40 text-sm">{step}</p>
-          <p className="text-white/25 text-xs mt-3">This takes 30–60 seconds — generating {chapters.length} chapters</p>
+        <div className="rounded-2xl border border-[#cfe3c4] p-10 text-center"
+          style={{ background: '#ffffff' }}>
+          <Loader size={32} className="mx-auto mb-4 text-[#1a6b0a] animate-spin" />
+          <p className="text-[#0f1a0b] font-semibold mb-1">Writing your guide...</p>
+          <p className="text-[#4a6040] text-sm">{step}</p>
+          <p className="text-[#4a6040] text-xs mt-3">This takes 30–60 seconds — generating {chapters.length} chapters</p>
         </div>
       )}
 
@@ -152,8 +151,8 @@ function GenerateContent() {
           <div className="flex gap-3 flex-wrap">
             <button
               onClick={() => downloadTxt(guide)}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-medium"
-              style={{ background: 'linear-gradient(135deg, #7c3aed, #a855f7)' }}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[#0f1a0b] text-sm font-medium"
+              style={{ background: '#4ad926' }}
             >
               <Download size={15}/> Download .txt
             </button>
@@ -161,40 +160,40 @@ function GenerateContent() {
           </div>
 
           {/* Gumroad blurb */}
-          <div className="rounded-2xl border border-emerald-500/20 p-5"
-            style={{ background: 'rgba(16,185,129,0.05)' }}>
+          <div className="rounded-2xl border border-[#cfe3c4] p-5"
+            style={{ background: '#eef8e6' }}>
             <div className="flex items-center justify-between mb-3">
-              <p className="text-emerald-400 text-xs font-bold uppercase tracking-widest">Gumroad Product Description</p>
+              <p className="text-[#1a6b0a] text-xs font-bold uppercase tracking-widest">Gumroad Product Description</p>
               <CopyBtn text={guide.gumroadBlurb} />
             </div>
-            <p className="text-white/70 text-sm leading-relaxed whitespace-pre-wrap">{guide.gumroadBlurb}</p>
+            <p className="text-[#2a3d22] text-sm leading-relaxed whitespace-pre-wrap">{guide.gumroadBlurb}</p>
           </div>
 
           {/* Introduction */}
-          <div className="rounded-2xl border border-white/[0.08] p-6"
-            style={{ background: 'rgba(255,255,255,0.03)' }}>
-            <h2 className="text-white font-bold text-lg mb-3">Introduction</h2>
+          <div className="rounded-2xl border border-[#cfe3c4] p-6"
+            style={{ background: '#ffffff' }}>
+            <h2 className="text-[#0f1a0b] font-bold text-lg mb-3">Introduction</h2>
             <div className="space-y-1">{renderMd(guide.introduction)}</div>
           </div>
 
           {/* Chapters */}
           {guide.chapters.map((ch, i) => (
-            <div key={i} className="rounded-2xl border border-white/[0.08] p-6"
-              style={{ background: 'rgba(255,255,255,0.03)' }}>
+            <div key={i} className="rounded-2xl border border-[#cfe3c4] p-6"
+              style={{ background: '#ffffff' }}>
               <div className="flex items-center gap-2 mb-3">
-                <span className="px-2 py-0.5 rounded-md bg-violet-500/20 text-violet-400 text-xs font-bold">
+                <span className="px-2 py-0.5 rounded-md bg-[#e4f6d8] text-[#1a6b0a] text-xs font-bold">
                   Chapter {i + 1}
                 </span>
-                <h2 className="text-white font-bold">{ch.title}</h2>
+                <h2 className="text-[#0f1a0b] font-bold">{ch.title}</h2>
               </div>
               <div className="space-y-1 mb-4">{renderMd(ch.content)}</div>
               {ch.tips.length > 0 && (
-                <div className="border-t border-white/[0.06] pt-4">
-                  <p className="text-white/30 text-xs font-bold uppercase tracking-wider mb-2">Key Takeaways</p>
+                <div className="border-t border-[#cfe3c4] pt-4">
+                  <p className="text-[#4a6040] text-xs font-bold uppercase tracking-wider mb-2">Key Takeaways</p>
                   <ul className="space-y-1">
                     {ch.tips.map((t, j) => (
-                      <li key={j} className="text-white/60 text-sm flex gap-2">
-                        <span className="text-violet-400 mt-0.5">•</span>{t}
+                      <li key={j} className="text-[#2a3d22] text-sm flex gap-2">
+                        <span className="text-[#1a6b0a] mt-0.5">•</span>{t}
                       </li>
                     ))}
                   </ul>
@@ -204,17 +203,17 @@ function GenerateContent() {
           ))}
 
           {/* Conclusion */}
-          <div className="rounded-2xl border border-white/[0.08] p-6"
-            style={{ background: 'rgba(255,255,255,0.03)' }}>
-            <h2 className="text-white font-bold text-lg mb-3">Conclusion</h2>
+          <div className="rounded-2xl border border-[#cfe3c4] p-6"
+            style={{ background: '#ffffff' }}>
+            <h2 className="text-[#0f1a0b] font-bold text-lg mb-3">Conclusion</h2>
             <div className="space-y-1">{renderMd(guide.conclusion)}</div>
             {guide.bonusTips.length > 0 && (
-              <div className="mt-4 border-t border-white/[0.06] pt-4">
-                <p className="text-white/30 text-xs font-bold uppercase tracking-wider mb-2">Bonus Tips</p>
+              <div className="mt-4 border-t border-[#cfe3c4] pt-4">
+                <p className="text-[#4a6040] text-xs font-bold uppercase tracking-wider mb-2">Bonus Tips</p>
                 <ul className="space-y-1">
                   {guide.bonusTips.map((t, i) => (
-                    <li key={i} className="text-white/60 text-sm flex gap-2">
-                      <span className="text-emerald-400 mt-0.5">•</span>{t}
+                    <li key={i} className="text-[#2a3d22] text-sm flex gap-2">
+                      <span className="text-[#1a6b0a] mt-0.5">•</span>{t}
                     </li>
                   ))}
                 </ul>
@@ -223,13 +222,13 @@ function GenerateContent() {
           </div>
 
           {/* Bottom CTA */}
-          <div className="rounded-2xl border border-violet-500/20 p-6 text-center"
-            style={{ background: 'rgba(124,58,237,0.05)' }}>
-            <p className="text-white font-bold text-lg mb-2">Ready to sell this guide?</p>
-            <p className="text-white/45 text-sm mb-4">Copy the Gumroad description above → create a product → price at ${`{guide.suggestedPrice ?? 17}`} → publish.</p>
+          <div className="rounded-2xl border border-[#cfe3c4] p-6 text-center"
+            style={{ background: '#eef8e6' }}>
+            <p className="text-[#0f1a0b] font-bold text-lg mb-2">Ready to sell this guide?</p>
+            <p className="text-[#4a6040] text-sm mb-4">Copy the Gumroad description above → create a product → set a price (start from the suggestion on the idea card) → publish.</p>
             <a href="https://gumroad.com" target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white text-sm font-medium"
-              style={{ background: 'linear-gradient(135deg, #7c3aed, #ec4899)' }}>
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-[#0f1a0b] text-sm font-medium"
+              style={{ background: '#4ad926' }}>
               Open Gumroad → List now
             </a>
           </div>
@@ -241,9 +240,8 @@ function GenerateContent() {
 
 export default function GeneratePage() {
   return (
-    <div className="min-h-screen" style={{ background: '#080712' }}>
-      <Navbar />
-      <Suspense fallback={<div className="text-center py-24 text-white/40">Loading...</div>}>
+    <div className="min-h-screen" style={{ background: 'transparent' }}>
+      <Suspense fallback={<div className="text-center py-24 text-[#4a6040]">Loading...</div>}>
         <GenerateContent />
       </Suspense>
     </div>

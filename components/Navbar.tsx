@@ -1,71 +1,30 @@
-'use client'
 import Link from 'next/link'
-import { useState } from 'react'
-import { Menu, X, Zap } from 'lucide-react'
+
+export function Logo({ size = 28 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true">
+      <rect width="64" height="64" rx="14" fill="#4ad926" />
+      <path d="M19 12h19l9 9v31a3 3 0 0 1-3 3H19a3 3 0 0 1-3-3V15a3 3 0 0 1 3-3z" fill="#f6faf1" />
+      <path d="M38 12v9h9" fill="#cfe3c4" />
+      <path d="M22 30h20M22 37h14M22 44h9" stroke="#0f1a0b" strokeWidth="3" strokeLinecap="round" />
+      <path d="M48 6l1.8 4.2L54 12l-4.2 1.8L48 18l-1.8-4.2L42 12l4.2-1.8z" fill="#0f1a0b" />
+    </svg>
+  )
+}
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false)
-
   return (
-    <nav className="sticky top-0 z-50 border-b border-white/[0.08] bg-[#1e1b2e]/90"
-      style={{ backdropFilter: 'blur(20px)' }}>
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <div style={{ width: 26, height: 26, borderRadius: 7, background: 'linear-gradient(135deg, #4338ca, #6366f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M6 2h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2z" stroke="white" strokeWidth="1.8" fill="none"/>
-              <path d="M15 2v5h5" stroke="white" strokeWidth="1.8" fill="none"/>
-            </svg>
-          </div>
-          <span className="font-extrabold text-xl text-[#f3e8ff]">
-            PDF<span className="text-[#e879f9]">Ideas</span>
-          </span>
+    <header className="sticky top-0 z-50 border-b backdrop-blur" style={{ background: 'rgba(246,250,241,0.88)', borderColor: 'var(--border)' }}>
+      <nav className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3" aria-label="Main">
+        <Link href="/" className="flex items-center gap-2 font-extrabold text-lg min-h-11" style={{ color: 'var(--foreground)' }}>
+          <Logo /><span>PDF<span style={{ color: 'var(--accent-ink)' }}>Ideas</span></span>
         </Link>
-
-        {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-8 text-sm text-white/50">
-          <Link href="/"             className="hover:text-[#f3e8ff] transition-colors duration-150">Ideas</Link>
-          <Link href="/generate"     className="hover:text-[#f3e8ff] transition-colors duration-150">Write Guide</Link>
-          <Link href="/how-it-works" className="hover:text-[#f3e8ff] transition-colors duration-150">How it works</Link>
+        <div className="flex items-center gap-4 sm:gap-6 text-sm font-medium" style={{ color: 'var(--text-2)' }}>
+          <Link href="/how-it-works" className="hidden sm:inline-flex items-center min-h-11 hover:underline">How it works</Link>
+          <Link href="/#pricing" className="hidden sm:inline-flex items-center min-h-11 hover:underline">Pricing</Link>
+          <Link href="/#generate" className="btn-accent inline-flex items-center px-4 rounded-xl min-h-11 text-sm">Generate ideas</Link>
         </div>
-
-        {/* CTA */}
-        <div className="hidden md:flex items-center gap-3">
-          <a
-            href="https://gumroad.com"
-            target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold text-[#1e1b2e] bg-[#e879f9] hover:bg-[#f0abfc] active:scale-[0.97]"
-            style={{ transition: 'background-color 150ms, transform 100ms' }}
-          >
-            <Zap size={14} /> Sell on Gumroad
-          </a>
-        </div>
-
-        {/* Mobile toggle */}
-        <button className="md:hidden p-2 text-white/50 hover:text-[#f3e8ff]" onClick={() => setOpen(!open)}
-          aria-label={open ? 'Close menu' : 'Open menu'}>
-          {open ? <X size={22} /> : <Menu size={22} />}
-        </button>
-      </div>
-
-      {/* Mobile menu */}
-      {open && (
-        <div className="md:hidden border-t border-white/[0.08] px-6 py-4 flex flex-col gap-4 text-sm bg-[#1e1b2e]">
-          <Link href="/"             className="text-white/60 hover:text-[#f3e8ff]" onClick={() => setOpen(false)}>Ideas</Link>
-          <Link href="/generate"     className="text-white/60 hover:text-[#f3e8ff]" onClick={() => setOpen(false)}>Write Guide</Link>
-          <Link href="/how-it-works" className="text-white/60 hover:text-[#f3e8ff]" onClick={() => setOpen(false)}>How it works</Link>
-          <a
-            href="https://gumroad.com"
-            target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold text-[#1e1b2e] text-center justify-center bg-[#e879f9] hover:bg-[#f0abfc] active:scale-[0.97]"
-            style={{ transition: 'background-color 150ms, transform 100ms' }}
-            onClick={() => setOpen(false)}
-          >
-            <Zap size={14} /> Sell on Gumroad
-          </a>
-        </div>
-      )}
-    </nav>
+      </nav>
+    </header>
   )
 }

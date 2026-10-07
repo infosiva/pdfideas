@@ -58,18 +58,18 @@ const FAQS = [
 
 export default function HowItWorksPage() {
   return (
-    <div className="min-h-screen" style={{ background: '#080712' }}>
+    <div className="min-h-screen" style={{ background: 'transparent' }}>
       <div className="max-w-4xl mx-auto px-6 py-16">
 
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-500/10 text-violet-400 text-xs font-medium border border-violet-500/20 mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#e4f6d8] text-[#1a6b0a] text-xs font-medium border border-[#cfe3c4] mb-4">
             <Zap size={12} /> From zero to selling in 10 minutes
           </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-[#0f1a0b] mb-4">
             How PDFIdeas works
           </h1>
-          <p className="text-white/45 text-lg max-w-2xl mx-auto">
+          <p className="text-[#4a6040] text-lg max-w-2xl mx-auto">
             AI finds the gap, writes the guide, and pre-fills your Gumroad listing.
             You review, publish, and collect the sales.
           </p>
@@ -81,22 +81,22 @@ export default function HowItWorksPage() {
             const Icon = s.icon
             return (
               <div key={i}
-                className="rounded-2xl border border-white/[0.08] p-6 flex gap-5"
-                style={{ background: 'rgba(255,255,255,0.03)' }}
+                className="rounded-2xl border border-[#cfe3c4] p-6 flex gap-5"
+                style={{ background: '#ffffff' }}
               >
                 <div className="flex-shrink-0">
                   <div className="w-12 h-12 rounded-xl flex items-center justify-center"
-                    style={{ background: 'rgba(124,58,237,0.15)' }}>
-                    <Icon size={22} className="text-violet-400" />
+                    style={{ background: '#eef8e6' }}>
+                    <Icon size={22} className="text-[#1a6b0a]" />
                   </div>
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="text-violet-500/60 text-xs font-mono font-bold">{s.step}</span>
-                    <h3 className="text-white font-bold text-lg">{s.title}</h3>
+                    <span className="text-[#1a6b0a] text-xs font-mono font-bold">{s.step}</span>
+                    <h3 className="text-[#0f1a0b] font-bold text-lg">{s.title}</h3>
                   </div>
-                  <p className="text-white/60 text-sm leading-relaxed mb-2">{s.desc}</p>
-                  <p className="text-white/30 text-xs leading-relaxed">{s.detail}</p>
+                  <p className="text-[#2a3d22] text-sm leading-relaxed mb-2">{s.desc}</p>
+                  <p className="text-[#4a6040] text-xs leading-relaxed">{s.detail}</p>
                 </div>
               </div>
             )
@@ -105,29 +105,29 @@ export default function HowItWorksPage() {
 
         {/* FAQ */}
         <div className="mb-16">
-          <h2 className="text-2xl font-extrabold text-white mb-6">Common questions</h2>
+          <h2 className="text-2xl font-extrabold text-[#0f1a0b] mb-6">Common questions</h2>
           <div className="space-y-4">
             {FAQS.map((faq, i) => (
               <div key={i}
-                className="rounded-xl border border-white/[0.06] p-5"
-                style={{ background: 'rgba(255,255,255,0.02)' }}
+                className="rounded-xl border border-[#cfe3c4] p-5"
+                style={{ background: '#ffffff' }}
               >
-                <p className="text-white font-semibold text-sm mb-2">{faq.q}</p>
-                <p className="text-white/50 text-sm leading-relaxed">{faq.a}</p>
+                <p className="text-[#0f1a0b] font-semibold text-sm mb-2">{faq.q}</p>
+                <p className="text-[#4a6040] text-sm leading-relaxed">{faq.a}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* CTA */}
-        <div className="text-center rounded-2xl border border-violet-500/20 p-10"
-          style={{ background: 'rgba(124,58,237,0.06)' }}>
-          <h2 className="text-2xl font-extrabold text-white mb-3">Ready to find your first idea?</h2>
-          <p className="text-white/45 mb-6">No account. No credit card. Just ideas that sell.</p>
+        <div className="text-center rounded-2xl border border-[#cfe3c4] p-10"
+          style={{ background: '#eef8e6' }}>
+          <h2 className="text-2xl font-extrabold text-[#0f1a0b] mb-3">Ready to find your first idea?</h2>
+          <p className="text-[#4a6040] mb-6">No account. No credit card. Just ideas that sell.</p>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-white text-sm"
-            style={{ background: 'linear-gradient(135deg, #7c3aed, #a855f7, #ec4899)' }}
+            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-[#0f1a0b] text-sm"
+            style={{ background: '#4ad926' }}
           >
             <Zap size={16} /> Generate Ideas Free
             <ArrowRight size={14} />

@@ -3,11 +3,12 @@ import { Inter } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
 import config from '@/vertical.config'
-import { getMeshStyle, getScrollbarColor, COLOR_MAP } from '@/lib/themeColors'
+import { loadSiteTheme, buildThemeStyleTag, buildGa4Snippet } from '@/lib/theme-loader'
+import { AnimatedBg } from '@/components/AnimatedBg'
+import ConsentBanner from '@/components/ConsentBanner'
 import Navbar from '@/components/Navbar'
 import FloatingChatWrapper from '@/components/FloatingChatWrapper'
 import { getSiteFlags } from '@/lib/flags'
-import BackToTop from '@/components/BackToTop'
 import FeedbackWidget from '@/components/FeedbackWidget'
 
 import { MotionProvider } from "@infosiva/shared-ui/modern";
@@ -30,26 +31,18 @@ export const metadata: Metadata = {
   },
 }
 
-// Derive CSS custom properties from vertical theme at build time
-const colors   = COLOR_MAP[config.themeColor] ?? COLOR_MAP['violet']
-const meshStyle = getMeshStyle(config.themeColor)
-
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const flags = await getSiteFlags('pdfideas')
+  const [flags, theme] = await Promise.all([getSiteFlags('pdfideas'), loadSiteTheme('pdfideas')])
+  const ga4 = buildGa4Snippet(theme)
   return (
     <html
       lang="en"
+      data-layout={theme?.layout?.archetype ?? 'docs-knowledge'}
       className="h-full"
-      style={{
-        // CSS vars consumed by globals.css animations and scrollbar
-        '--theme-primary':   colors.primary,
-        '--theme-secondary': colors.secondary,
-        '--theme-base':      colors.base,
-        '--scrollbar-color': getScrollbarColor(config.themeColor),
-      } as React.CSSProperties}
       suppressHydrationWarning
     >
       <head>
+        <style dangerouslySetInnerHTML={{ __html: buildThemeStyleTag(theme) }} />
         <meta name="google-adsense-account" content="ca-pub-4237294630161176" />
         <Script
                   async
@@ -66,31 +59,31 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         })}} />
       </head>
       <body className={`${inter.className} min-h-full flex flex-col`}
-        style={{ background: 'var(--background, #fafafe)', color: 'var(--foreground, #0f172a)' }}
+        style={{ background: 'var(--background)', color: 'var(--foreground)' }}
       >
-        {/* Subtle top border accent */}
-        <div style={{ height: 3, background: 'linear-gradient(90deg, var(--accent, #6366f1), var(--accent-2, #4f46e5))', flexShrink: 0 }} />
-
+        <AnimatedBg theme={theme} fallback="none" />
         <Navbar />
 
         <main className="flex-1">
           <MotionProvider>{children}</MotionProvider>
         </main>
 
-        <footer className="border-t py-8 px-6" style={{ borderColor: 'var(--border, #c7d2fe)', background: 'var(--surface-1, #ffffff)' }}>
-          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm" style={{ color: 'var(--text-3, #64748b)' }}>
+        <footer className="border-t py-8 px-6" style={{ borderColor: 'var(--border)', background: 'var(--surface-1)' }}>
+          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm" style={{ color: 'var(--text-3)' }}>
             <span>© {new Date().getFullYear()} {config.name}. All rights reserved.</span>
             <div className="flex gap-6">
-              <a href="/privacy" className="hover:opacity-80 transition-opacity" style={{ color: 'var(--text-2, #475569)' }}>Privacy</a>
-              <a href="/terms"   className="hover:opacity-80 transition-opacity" style={{ color: 'var(--text-2, #475569)' }}>Terms</a>
-              <a href="/contact" className="hover:opacity-80 transition-opacity" style={{ color: 'var(--text-2, #475569)' }}>Contact</a>
+              <a href="/privacy" className="hover:opacity-80 transition-opacity" style={{ color: 'var(--text-2)' }}>Privacy</a>
+              <a href="/terms"   className="hover:opacity-80 transition-opacity" style={{ color: 'var(--text-2)' }}>Terms</a>
             </div>
           </div>
         </footer>
         {flags.chatbot && <FloatingChatWrapper />}
-        <BackToTop accentColor="#e879f9" />
         <FeedbackWidget siteName="PDFIdeas" />
-        <Script defer data-site={config.domain} src="https://31.97.56.148:3098/t.js" strategy="afterInteractive" />
+        {ga4 && <>
+          <Script src={`https://www.googletagmanager.com/gtag/js?id=${theme?.analytics?.ga4Id}`} strategy="afterInteractive" />
+          <Script id="ga4-init" strategy="afterInteractive">{ga4}</Script>
+        </>}
+        <ConsentBanner />
       </body>
     </html>
   )

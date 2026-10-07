@@ -71,9 +71,9 @@ export interface Category {
 const config: VerticalConfig = {
   id:         'pdfideas',
   name:       'PDFIdeas',
-  tagline:    'Chat across multiple PDFs at once — compare, extract, and summarise without switching tabs.',
+  tagline:    'Pick the PDF guide worth writing — AI ideas for Gumroad and Etsy.',
   domain:     'pdfideas.app',
-  themeColor: 'blue',
+  themeColor: 'green',
 
   providerLabel:  'Guide',
   providerPlural: 'Guides',

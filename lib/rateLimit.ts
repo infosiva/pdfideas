@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 type Entry = { count: number; resetAt: number }
-const hits = new Map<string, Entry>()
+
 
 function getIp(req: NextRequest): string {
   return (
@@ -12,6 +12,7 @@ function getIp(req: NextRequest): string {
 }
 
 function makeLimiter(max: number, windowMs: number) {
+  const hits = new Map<string, Entry>()
   return {
     check(req: NextRequest): NextResponse | null {
       const ip = getIp(req)
@@ -33,4 +34,6 @@ function makeLimiter(max: number, windowMs: number) {
   }
 }
 
-export const AI_LIMITER = makeLimiter(10, 60_000) // 10 req/min
+export const AI_LIMITER = makeLimiter(10, 60_000) // 10 req/min (idea generation)
+export const CHAT_LIMITER = makeLimiter(60, 3_600_000) // 60 req/hr/IP
+export const FEEDBACK_LIMITER = makeLimiter(20, 3_600_000) // 20 req/hr/IP
